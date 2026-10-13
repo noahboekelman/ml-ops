@@ -3,9 +3,9 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Config(BaseSettings):
     
-    app_version = 0.1
-    model_version = 0.1
-    environment = "dev"
+    app_version: str = "0.1"
+    model_version: str = "0.1"
+    environment: str = "dev"
     
     model_config = SettingsConfigDict(env_file=".env")
     
