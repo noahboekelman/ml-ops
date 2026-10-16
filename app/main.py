@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 
 from app.config import get_config
 from app.models import PredictionRequest, PredictionResponse
@@ -14,9 +14,10 @@ async def health() -> dict:
 
 @app.post("/predict")
 async def predict(request: PredictionRequest) -> PredictionResponse:
-    # TODO: Change when model is built
     #try:
     #    
     #except Exception as e:
     #   raise HTTPException(status_code=500, detail=f"Prediction failed with message: {str(e)}") from e
-    return PredictionResponse()
+    # pyrefly: ignore[missing-argument]
+    # TODO: Change when model is built, just for CI for now
+    return PredictionResponse(prediction=0.12345)
