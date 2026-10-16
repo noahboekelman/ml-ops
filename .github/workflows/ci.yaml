@@ -1,5 +1,5 @@
 name: GitHub Actions Demo
-run-name: Running CI on ${{ github.event_name }} to ${{ github.ref_name }}
+run-name: Running CI on ${{ github.event_name }}
 on:
   push:
     branches: [main]
