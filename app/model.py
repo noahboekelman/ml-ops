@@ -8,8 +8,10 @@ def load_dataset() -> tuple[pd.DataFrame, pd.Series]:
 
     Xy = load_diabetes(as_frame=True)
 
+    # pyrefly: ignore[missing-attribute]
     X = Xy.frame.drop(columns=["target"])
 
+    # pyrefly: ignore[missing-attribute]
     y = Xy.frame["target"] # acts as a "progression index" (higher = worse)
     
     print("------")

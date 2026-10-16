@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 
 from app.config import get_config
 from app.models import PredictionRequest, PredictionResponse
@@ -19,4 +19,5 @@ async def predict(request: PredictionRequest) -> PredictionResponse:
     #    
     #except Exception as e:
     #   raise HTTPException(status_code=500, detail=f"Prediction failed with message: {str(e)}") from e
+    # pyrefly: ignore[missing-argument]
     return PredictionResponse()
