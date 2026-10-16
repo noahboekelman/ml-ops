@@ -856,6 +856,7 @@ wheels = [
 name = "ml-ops"
 version = "0.1.0"
 source = { virtual = "." }
+default-groups = []
 dependencies = [
     { name = "fastapi", extra = ["standard"] },
     { name = "memo" },

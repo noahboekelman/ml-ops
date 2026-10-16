@@ -13,6 +13,9 @@ dependencies = [
     "scikit-learn>=1.9.1",
 ]
 
+[tool.uv]
+default-groups = []
+
 [dependency-groups]
 dev = [
     "pyrefly>=1.4.0",
