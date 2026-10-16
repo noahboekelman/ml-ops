@@ -14,10 +14,10 @@ async def health() -> dict:
 
 @app.post("/predict")
 async def predict(request: PredictionRequest) -> PredictionResponse:
-    # TODO: Change when model is built
     #try:
     #    
     #except Exception as e:
     #   raise HTTPException(status_code=500, detail=f"Prediction failed with message: {str(e)}") from e
     # pyrefly: ignore[missing-argument]
-    return PredictionResponse()
+    # TODO: Change when model is built, just for CI for now
+    return PredictionResponse(prediction=0.12345)
