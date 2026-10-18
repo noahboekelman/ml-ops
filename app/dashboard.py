@@ -32,9 +32,13 @@ dashboard_html_str = """
         </form>
         <div>
         </div>
-        <h3>Your Patient Records</h3>
+        <h3>Your Patient Records (descending)</h3>
         <form id="loadPatientsForm">
         <input id="nurseIdTableInput" type="text" placeholder="Your Nurse ID" required></input>
+        <select id="sortingOrder">
+        <option value="descending">Descending</option>
+        <option value="ascending">Ascending</option>
+        </select>
         <button type="submit">Load patients</button>
         </form>
         <table>
@@ -54,8 +58,9 @@ dashboard_html_str = """
     
     async function fetchNursePatients() {
         const nurseId = document.getElementById("nurseIdTableInput").value;
+        const sortingOrder = document.getElementById("sortingOrder").value;
         
-        const response = await fetch(`/nurse/${nurseId}/patients`);
+        const response = await fetch(`/nurse/${nurseId}/patients?sorting_order=${sortingOrder}`);
         const patients = await response.json();
         
         const tableBody = document.getElementById("patientsBody");
