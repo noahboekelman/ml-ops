@@ -222,5 +222,5 @@ __marimo__/
 # VSCode
 .vscode
 
-# Test data
+# Data used to store nurses' patient predictions for the dashboard
 app/data/*
