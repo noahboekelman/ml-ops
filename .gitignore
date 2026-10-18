@@ -205,6 +205,9 @@ cython_debug/
 # Temporary file for partial code execution
 tempCodeRunnerFile.py
 
+# Trained model store (rebuilt deterministically during training/build)
+app/model_store/
+
 # Ruff stuff:
 .ruff_cache/
 

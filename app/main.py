@@ -1,14 +1,16 @@
 import json
 import os
+from functools import lru_cache
 from typing import Literal
 from uuid import uuid4
 
+import pandas as pd
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
-from numpy.random import random
 
 from app.config import get_config
 from app.dashboard import dashboard_html_str
+from app.model import FEATURE_NAMES, load_model
 from app.models import (
     PatientPrediction,
     PredictionRequest,
@@ -20,6 +22,11 @@ app = FastAPI()
 
 config = get_config()
 
+
+@lru_cache
+def get_model():
+    return load_model()
+
 _RECORDS_PATH = "./app/data/records.json"
 
 def write_patient_prediction(nurse_id: str, patient_id: str, prediction: float, patient_values: dict) -> None:
@@ -28,7 +35,7 @@ def write_patient_prediction(nurse_id: str, patient_id: str, prediction: float, 
     This data will not survive Docker runs, but will survive local API runs.
     """
     new_patient = {"nurse_id": nurse_id, "patient_id": patient_id, "prediction": prediction, "patient_input_values": patient_values}
-    
+
     if os.path.exists(_RECORDS_PATH):
         with open(_RECORDS_PATH) as file:
             data = json.load(file)
@@ -50,26 +57,20 @@ async def health() -> dict:
 
 @app.post("/predict")
 async def predict(request: PredictionRequest) -> PredictionResponse:
-    #try:
-    #    
-    #except Exception as e:
-    #   raise HTTPException(status_code=500, detail=f"Prediction failed with message: {str(e)}") from e
-    # pyrefly: ignore[missing-argument]
-    # TODO: Change when model is built, just for CI for now
-    placeholder_prediction = random()
-    nurse_id = request.nurse_id
-    patient_id = request.patient_id
     patient_values = request.model_dump(exclude={"patient_id", "nurse_id"})
-    
-    # Save to JSON file
-    write_patient_prediction(
-        nurse_id=nurse_id,
-        patient_id=patient_id,
-        prediction=placeholder_prediction,
-        patient_values=patient_values
+    features = pd.DataFrame(
+        [[patient_values[name] for name in FEATURE_NAMES]], columns=FEATURE_NAMES
     )
-    
-    return PredictionResponse(prediction=placeholder_prediction)
+    prediction = float(get_model().predict(features)[0])
+
+    write_patient_prediction(
+        nurse_id=request.nurse_id,
+        patient_id=request.patient_id,
+        prediction=prediction,
+        patient_values=patient_values,
+    )
+
+    return PredictionResponse(prediction=prediction)
 
 @app.get("/generate-nurse-id")
 async def generate_nurse_id() -> str:

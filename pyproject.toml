@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "fastapi[standard]>=0.143.0",
+    "joblib>=1.6.0",
     "memo>=0.2.4",
     "pandas>=3.0.6",
     "pydantic>=2.14.1",
@@ -15,6 +16,9 @@ dependencies = [
 
 [tool.uv]
 default-groups = []
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
 
 [tool.pyrefly]
 project-includes = [
