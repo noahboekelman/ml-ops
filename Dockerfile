@@ -10,6 +10,8 @@ ENV UV_NO_DEV=1
 
 RUN uv sync --locked
 
+RUN uv run python -m app.model   # bakes the model into the image
+
 EXPOSE 80
 
 CMD ["uv", "run", "fastapi", "run", "--port", "80"]

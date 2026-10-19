@@ -859,6 +859,7 @@ source = { virtual = "." }
 default-groups = []
 dependencies = [
     { name = "fastapi", extra = ["standard"] },
+    { name = "joblib" },
     { name = "memo" },
     { name = "pandas" },
     { name = "pydantic" },
@@ -877,6 +878,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "fastapi", extras = ["standard"], specifier = ">=0.143.0" },
+    { name = "joblib", specifier = ">=1.6.0" },
     { name = "memo", specifier = ">=0.2.4" },
     { name = "pandas", specifier = ">=3.0.6" },
     { name = "pydantic", specifier = ">=2.14.1" },
