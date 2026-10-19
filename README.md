@@ -62,39 +62,25 @@ docker run -p 80:80 ml-ops
 We will find the container (with the API) running locally on `http://localhost:80/docs`.
 
 # Pipelines and Releases
-We currently have three Github Workflows that runs actions.
-* **ci.yaml**: Runs on each PR and is also called by `cicd.yaml` and `release.yaml`.
-* **cicd.yaml**: Runs on pushes and merges to main.
-* **release.yaml**: Runs on tag operations (prefixed with `v`).
+We currently have two Github Workflows that runs actions.
+* **ci.yaml**: Runs on each PR and merge to main and is also called by `release.yaml`.
+* **release.yaml**: Runs on tag operations (prefixed with `v`). Runs CI + CD + Release.
 
-For each build (cicd and release) we push the image to GHCR.
+For each release we push the image to GHCR.
 
 ## Images
-All images are pushed to `ghcr.io/noahboekelman/ml-ops` with different tags per workflow:
-
-* **cicd.yaml**: `ghcr.io/noahboekelman/ml-ops:<commit-sha>`
-* **release.yaml**: `ghcr.io/noahboekelman/ml-ops:<git-tag>` (e.g. `:v0.1`) and `ghcr.io/noahboekelman/ml-ops:latest`
+Images are pushed to `ghcr.io/noahboekelman/ml-ops` tagged with the git tag (e.g. `:v0.1`) and `:latest`.
 
 ## Example Release
 We always tag from main.
 Tags are always prefixed with `v`.
 
+Release notes are now taken from `CHANGELOG.md` in the release workflow, so a plain tag is enough (no need for annotated tag):
+
 ```bash
 git checkout main
 git pull
-```
-To create and push a release tag, we use **annotated tags** to include release notes:
-
-```bash
-git tag -a v0.1 -m "First release
-- <Some release note>
-- <Some other release note>"
-git push origin v0.1
-```
-
-We can also create and push a tag with the release notes from a markdown file:
-```bash
-git tag -a v0.1 -F release-notes-v0.1.md
+git tag v0.1
 git push origin v0.1
 ```
 

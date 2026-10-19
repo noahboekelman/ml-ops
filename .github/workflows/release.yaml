@@ -44,3 +44,25 @@ jobs:
           annotations: ${{ steps.meta.outputs.annotations }} # metadata
           provenance: true
           sbom: true
+  release:
+    needs: build # Only publishes a release if the image made it to GHCR
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Needed to execute the git commands for the releaese
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+
+      - name: Sync packages
+        run: uv sync --locked
+
+      - name: Train model to get the metrics for this tag
+        run: uv run python -m app.model
+
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" --notes-file CHANGELOG.md app/model_store/metrics.json
