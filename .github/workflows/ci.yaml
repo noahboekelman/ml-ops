@@ -55,18 +55,28 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
 
-      - name: Run smoke tests on /health and /predict
+      - name: Run smoke tests on /health, /predict and /dashboard/predict
         run: |
           docker build -t ml-ops .
           docker run -d -p 80:80 ml-ops
           sleep 30          # Wait for the container to start
           
+          # Test /health
           response=$(curl -sS --fail http://localhost:80/health)
           echo "$response" | jq -e '.status == "ok"'
 
+          # Test /predict
+          status=$(curl -s -o /dev/null -w '%{http_code}' \
+          --header "Content-Type: application/json" \
+          --request POST \
+          --data '{"sex": 0.1, "age": 0.1, "bmi": 0.1, "bp": 0.1, "s1": 0.1, "s2": 0.1, "s3": 0.1, "s4": 0.1, "s5": 0.1, "s6": 0.1}' \
+          http://localhost:80/predict)
+          [ "$status" = "200" ]
+
+          # Test /dashboard/predict
           status=$(curl -s -o /dev/null -w '%{http_code}' \
           --header "Content-Type: application/json" \
           --request POST \
           --data '{"nurse_id": "smoketest-123", "patient_id": "smoketest-123", "sex": 0.1, "age": 0.1, "bmi": 0.1, "bp": 0.1, "s1": 0.1, "s2": 0.1, "s3": 0.1, "s4": 0.1, "s5": 0.1, "s6": 0.1}' \
-          http://localhost:80/predict)
+          http://localhost:80/dashboard/predict)
           [ "$status" = "200" ]

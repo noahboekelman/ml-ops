@@ -36,9 +36,9 @@ def test_predict_returns_numeric_prediction():
     assert isinstance(body["prediction"], float)
 
 
-def test_predict_missing_ids_returns_422():
-    payload = {k: v for k, v in VALID_PAYLOAD.items() if k not in {"nurse_id", "patient_id"}}
-    response = client.post("/predict", json=payload)
+def test_dashboard_predict_missing_ids_returns_422():
+    payload = {"values": {k: v for k, v in VALID_PAYLOAD.items() if k not in {"nurse_id", "patient_id"}}}
+    response = client.post("/dashboard/predict", json=payload)
     assert response.status_code == 422
     body = response.json()
     assert "detail" in body

@@ -60,7 +60,7 @@ dashboard_html_str = """
         const nurseId = document.getElementById("nurseIdTableInput").value;
         const sortingOrder = document.getElementById("sortingOrder").value;
         
-        const response = await fetch(`/nurse/${nurseId}/patients?sorting_order=${sortingOrder}`);
+        const response = await fetch(`/dashboard/nurse/${nurseId}/patients?sorting_order=${sortingOrder}`);
         const patients = await response.json();
         
         const tableBody = document.getElementById("patientsBody");
@@ -76,7 +76,7 @@ dashboard_html_str = """
     }
     
     async function generateNurseId() {
-        const response = await fetch(`/generate-nurse-id`);
+        const response = await fetch(`/dashboard/generate-nurse-id`);
         nurseId = await response.json();
         
         generatedNurseIdEl.textContent = `  ${nurseId}  - This is your nurse ID. Paste this when making calls.`
@@ -96,13 +96,13 @@ dashboard_html_str = """
         const s5 = Number(document.getElementById("s5Input").value);
         const s6 = Number(document.getElementById("s6Input").value);
         
-        const response = await fetch(`/predict`, {
+        const response = await fetch(`/dashboard/predict`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 nurse_id: nurseId,
                 patient_id: patientId,
-                age, sex, bmi, bp, s1, s2, s3, s4, s5, s6,
+                values: { age, sex, bmi, bp, s1, s2, s3, s4, s5, s6 },
             }),
         });
         const predictionResponse = await response.json();
