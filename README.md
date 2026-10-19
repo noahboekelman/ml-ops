@@ -75,22 +75,12 @@ Images are pushed to `ghcr.io/noahboekelman/ml-ops` tagged with the git tag (e.g
 We always tag from main.
 Tags are always prefixed with `v`.
 
+Release notes are now taken from `CHANGELOG.md` in the release workflow, so a plain tag is enough (no need for annotated tag):
+
 ```bash
 git checkout main
 git pull
-```
-To create and push a release tag, we use **annotated tags** to include release notes:
-
-```bash
-git tag -a v0.1 -m "First release
-- <Some release note>
-- <Some other release note>"
-git push origin v0.1
-```
-
-We can also create and push a tag with the release notes from a markdown file:
-```bash
-git tag -a v0.1 -F release-notes-v0.1.md
+git tag v0.1
 git push origin v0.1
 ```
 
