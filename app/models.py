@@ -4,8 +4,6 @@ from pydantic import BaseModel
 class PredictionRequest(BaseModel):
     "Validation happens here, and the model is used in the API contract"
     
-    nurse_id: str
-    patient_id: str
     age: float
     sex: float
     bmi: float
@@ -16,6 +14,13 @@ class PredictionRequest(BaseModel):
     s4: float
     s5: float
     s6: float
+    
+class DashboardPredictionRequest(BaseModel):
+    "The ids needed to store the record for the dashboard, plus the patient features"
+
+    nurse_id: str
+    patient_id: str
+    values: PredictionRequest
     
 class PredictionResponse(BaseModel):
     "The prediction returned by the model"

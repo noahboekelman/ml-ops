@@ -12,6 +12,7 @@ from app.config import get_config
 from app.dashboard import dashboard_html_str
 from app.model import FEATURE_NAMES, load_model
 from app.models import (
+    DashboardPredictionRequest,
     PatientPrediction,
     PredictionRequest,
     PredictionResponse,
@@ -28,6 +29,12 @@ def get_model():
     return load_model()
 
 _RECORDS_PATH = "./app/data/records.json"
+
+def get_prediction(request: PredictionRequest) -> float:
+    features = pd.DataFrame(
+        [[getattr(request, name) for name in FEATURE_NAMES]], columns=FEATURE_NAMES
+    )
+    return float(get_model().predict(features)[0])
 
 def write_patient_prediction(nurse_id: str, patient_id: str, prediction: float, patient_values: dict) -> None:
     """Stand-in database operations, as creating a database was out of scope for this assignment.
@@ -54,30 +61,31 @@ def write_patient_prediction(nurse_id: str, patient_id: str, prediction: float, 
 async def health() -> dict:
     return {"status":"ok", "model_version": config.model_version}
 
-
 @app.post("/predict")
 async def predict(request: PredictionRequest) -> PredictionResponse:
-    patient_values = request.model_dump(exclude={"patient_id", "nurse_id"})
-    features = pd.DataFrame(
-        [[patient_values[name] for name in FEATURE_NAMES]], columns=FEATURE_NAMES
-    )
-    prediction = float(get_model().predict(features)[0])
+    """Return a prediction for a patient **without** writing the result to a JSON file."""
+    return PredictionResponse(prediction=get_prediction(request))
+
+@app.post("/dashboard/predict")
+async def dashboard_predict(request: DashboardPredictionRequest) -> PredictionResponse:
+    """Return a prediction and write the result to a JSON file for storage."""
+    prediction = get_prediction(request.values)
 
     write_patient_prediction(
         nurse_id=request.nurse_id,
         patient_id=request.patient_id,
         prediction=prediction,
-        patient_values=patient_values,
+        patient_values=request.values.model_dump(),
     )
 
     return PredictionResponse(prediction=prediction)
 
-@app.get("/generate-nurse-id")
+@app.get("/dashboard/generate-nurse-id")
 async def generate_nurse_id() -> str:
     "Generates a one-time nurse id to group each patient prediction per nurse."
     return str(uuid4())
 
-@app.get("/nurse/{nurse_id}/patients")
+@app.get("/dashboard/nurse/{nurse_id}/patients")
 def get_nurse_patients(nurse_id: str, sorting_order: Literal["ascending", "descending"] = "descending") -> PredictionsResponse:
     if not os.path.exists(_RECORDS_PATH):
         return PredictionsResponse(predictions=[])
