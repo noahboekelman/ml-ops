@@ -1,6 +1,8 @@
 name: Github Actions CI
 run-name: Running CI on ${{ github.event_name }}
 on:
+  push:
+    branches: [main]
   pull_request:
     branches: [main]
   workflow_call:
