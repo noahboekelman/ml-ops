@@ -73,7 +73,7 @@ For each build (cicd and release) we push the image to GHCR.
 All images are pushed to `ghcr.io/noahboekelman/ml-ops` with different tags per workflow:
 
 * **cicd.yaml**: `ghcr.io/noahboekelman/ml-ops:<commit-sha>`
-* **release.yaml**: `ghcr.io/noahboekelman/ml-ops:<version>`, `ghcr.io/noahboekelman/ml-ops:<major>.<minor>` and `ghcr.io/noahboekelman/ml-ops:latest`
+* **release.yaml**: `ghcr.io/noahboekelman/ml-ops:<git-tag>` (e.g. `:v0.1`) and `ghcr.io/noahboekelman/ml-ops:latest`
 
 ## Example Release
 We always tag from main.
@@ -86,16 +86,16 @@ git pull
 To create and push a release tag, we use **annotated tags** to include release notes:
 
 ```bash
-git tag -a v0.0.1 -m "First release
+git tag -a v0.1 -m "First release
 - <Some release note>
 - <Some other release note>"
-git push origin v0.0.1
+git push origin v0.1
 ```
 
 We can also create and push a tag with the release notes from a markdown file:
 ```bash
-git tag -a v0.0.1 -F release-notes-v0.0.1.md
-git push origin v0.0.1
+git tag -a v0.1 -F release-notes-v0.1.md
+git push origin v0.1
 ```
 
 
