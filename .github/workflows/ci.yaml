@@ -77,6 +77,6 @@ jobs:
           status=$(curl -s -o /dev/null -w '%{http_code}' \
           --header "Content-Type: application/json" \
           --request POST \
-          --data '{"nurse_id": "smoketest-123", "patient_id": "smoketest-123", "sex": 0.1, "age": 0.1, "bmi": 0.1, "bp": 0.1, "s1": 0.1, "s2": 0.1, "s3": 0.1, "s4": 0.1, "s5": 0.1, "s6": 0.1}' \
+          --data '{"nurse_id": "smoketest-123", "patient_id": "smoketest-123", "values": {"age": 0.1, "sex": 0.1, "bmi": 0.1, "bp": 0.1, "s1": 0.1, "s2": 0.1, "s3": 0.1, "s4": 0.1, "s5": 0.1, "s6": 0.1}}' \
           http://localhost:80/dashboard/predict)
           [ "$status" = "200" ]
