@@ -62,7 +62,7 @@ docker run -p 80:80 ml-ops
 We will find the container (with the API) running locally on `http://localhost:80/docs`.
 
 # Pipelines and Releases
-We currently have three Github Workflows that runs actions.
+We currently have two Github Workflows that runs actions.
 * **ci.yaml**: Runs on each PR and merge to main and is also called by `release.yaml`.
 * **release.yaml**: Runs on tag operations (prefixed with `v`). Runs CI + CD + Release.
 
